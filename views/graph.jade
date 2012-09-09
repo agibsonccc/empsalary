@@ -1,0 +1,70 @@
+html
+  body
+
+  head
+    meta(charset='utf-8')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js')
+    script(src='js/vendor/d3.min.js')
+    script(src='js/vendor/d3.layout.min.js')
+    script(src='js/vendor/rickshaw.min.js')
+    title graph
+    meta(name='description', content='')
+    meta(name='author', content='Adam Gibson')
+    // Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references
+    link(rel='stylesheet', type='text/css', href='css/rickshaw.min.css')
+  body
+    #graph
+    #legend
+    #stats
+    script
+      /* http://www.netlobo.com/url_query_string_javascript.html */
+      function gup(name) {
+      name = name.replace(/[\\[]/, "\\\[").replace(/[\]]/, "\\\]");
+      var regexS = "[\\\?&]" + name + "=([^&#]*)";
+      var regex = new RegExp(regexS);
+      var results = regex.exec(window.location.href);
+      if (results == null)
+      return "";
+      else
+      return results[1];
+      }
+      $(document).ready(function() {
+      var id="#{id}";
+      console.log(id);
+      if(!id) {
+      alert('No id found');
+      return;
+      }
+      $.getJSON('/employees/history/' + id, {}, function(data) {
+      var graph = new Rickshaw.Graph({
+      element : document.querySelector("#graph"),
+      renderer : 'line',
+      width: 500,
+      height: 300,
+      series : [{
+      data : data,
+      color : 'steelblue',
+      name : 'Salary'
+      }]
+      });
+      graph.render();
+      var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+       graph: graph
+      } );
+
+      
+      var shelving = new Rickshaw.Graph.Behavior.Series.Toggle( {
+       graph: graph,
+       } );
+        var axes = new Rickshaw.Graph.Axis.Time( {
+        graph: graph
+        } );
+      axes.render();
+      });
+      $.getJSON('/employees/history/stats/' + id,{},function(data) {
+               for(var i in data) {
+               var key=i,val=data[key];
+               $('#stats').append('<p>' + key + ':'+ val + '</p>');  
+               }
+      });
+      });

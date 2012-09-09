@@ -7,6 +7,9 @@ Employee salary rendering in node, data visualization with rickshaw, and some ba
 To run the sample:
 node app.js
 
+Point your browser at:
+http://localhost:3000
+
 Once started, upload the two csv files in the following order:
 employees_small.csv
 salaries_small.csv

@@ -36,6 +36,13 @@ html
       return;
       }
       $.getJSON('/employees/history/' + id, {}, function(data) {
+      for(var i=0;i<data.length;i++) {
+         var coords=data[i];
+         $('#stats').append('<p>Date: ' + new Date(coords['x']).toString() + 'Salary: ' + coords['y'] + '</p>');
+        
+      }
+      
+      
       var graph = new Rickshaw.Graph({
       element : document.querySelector("#graph"),
       renderer : 'line',

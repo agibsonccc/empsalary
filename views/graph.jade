@@ -38,7 +38,7 @@ html
       $.getJSON('/employees/history/' + id, {}, function(data) {
       for(var i=0;i<data.length;i++) {
          var coords=data[i];
-         $('#stats').append('<p>Date: ' + new Date(coords['x']).toString() + 'Salary: ' + coords['y'] + '</p>');
+         $('#stats').append('<p>Date: ' + new Date(parseInt(coords['x'])).toString() + 'Salary: ' + coords['y'] + '</p>');
         
       }
       

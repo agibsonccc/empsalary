@@ -52,10 +52,12 @@ app.post('/upload', function(req, res) {
 				//{col1\tcol2\t : val1\tval2\t}
 				var keys = Object.keys(data), arr = [];
 				for (var i = 0; i < data.length; i++) {
+ 					// current object   // tab separated columns       values       column names            values
 					var obj = data[i], key = Object.keys(obj)[0], val = obj[key], cols = key.split('\t'), vals = val.split('\t');
-
+                    //new object for sending to the data service in the form of 
+                    //actual key value pairs for each column name and value
 					var build = {};
-
+                    //iterate and combine key value pairs
 					for (var j = 0; j < cols.length; j++) {
 						var objKey=cols[j],objVal=vals[j];
 						build[objKey]=objVal;
@@ -73,11 +75,10 @@ app.post('/upload', function(req, res) {
 		if (err)
 			res.json(500, err);
 	});
-
+    //handle file uploads
 	fileUpload.process(req, res);
 	res.json(200,JSON.stringify({'message' : 'done'}));
-	//res.end();
-	//res.send(JSON.stringify({'message' : 'thank you'}));
+	
 });
 /* Meant for use with data tables server side processing */
 app.get('/employeesdatatable', function(req, res) {
@@ -101,7 +102,7 @@ app.get('/employeesdatatable', function(req, res) {
 	};
 	res.json(200, ret);
 });
-
+/* display graphs for a given id */
 app.get('/graphhistory/:id',function(req,res){
 	res.render('graph', {title : 'Graph',id : req.params.id});
 });
@@ -110,12 +111,15 @@ app.get('/employees/:id', function(req, res) {
 	var ret = dataService.rowFor(req.params.id, false);
 	res.json(200, ret);
 });
+
+
+
 /* get employee history */
 app.get('/employees/history/:id', function(req, res) {
 	var arr = dataService.dataPoints(req.params.id,'start_of_salary','salary');
 	for(var i=0;i<arr.length;i++) {
 		var obj=arr[i],x=obj['x'],y=obj['y'];
-		obj['x']=parseFloat(new Date(obj['x']).getDate());
+		obj['x']=parseInt(new Date(obj['x']).getTime());
 		obj['y']=parseFloat(obj['y']);
 	}
 	res.json(200, arr);
